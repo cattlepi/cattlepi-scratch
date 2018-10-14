@@ -1,3 +1,4 @@
+#!/bin/bash
 export HOME=/sd
 cd $HOME && git clone https://github.com/cattlepi/cattlepi.git
 cd $HOME/cattlepi && make envsetup

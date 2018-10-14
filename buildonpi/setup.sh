@@ -1,9 +1,11 @@
 #!/bin/bash
+export SDROOT=/sd
+export HOME=${SDROOT}
 
 # move tmp to sdcard (ln -s) and ensure right permissions
-sudo mount /dev/mmcblk0p2 /sd
-sudo rm -rf /sd/*
-sudo chown pi:pi /sd
+sudo mount /dev/mmcblk0p2 ${SDROOT}
+sudo rm -rf ${SDROOT}/*
+sudo chown pi:pi ${SDROOT}
 
 # install the needed packages
 sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
@@ -13,34 +15,34 @@ ufw allow http
 sudo pip install virtualenv
 
 # setup the environment vars
-mkdir -p /sd/.aws
-cat <<'EOF' > /sd/.aws/config
+mkdir -p ${SDROOT}/.aws
+cat <<'EOF' > ${SDROOT}/.aws/config
 [default]
 output = json
 region = us-west-2
 EOF
 
-echo "[default]" > /sd/.aws/credentials
-echo "aws_access_key_id = $(jq -r ".config.buildcontrol.aws_ak" /tmp/current_config)" >> /sd/.aws/credentials
-echo "aws_secret_access_key = $(jq -r ".config.buildcontrol.aws_sk" /tmp/current_config)" >> /sd/.aws/credentials
+echo "[default]" > ${SDROOT}/.aws/credentials
+echo "aws_access_key_id = $(jq -r ".config.buildcontrol.aws_ak" /tmp/current_config)" >> ${SDROOT}/.aws/credentials
+echo "aws_secret_access_key = $(jq -r ".config.buildcontrol.aws_sk" /tmp/current_config)" >> ${SDROOT}/.aws/credentials
 
 # generate ssh keys
 sudo rm -rf /home/pi/.ssh/id_*
 su - pi -c "ssh-keygen -f /home/pi/.ssh/id_rsa -N '' -t rsa -b 4096 -C "hello@cattlepi.com""
 
 # cattlepi section
-mkdir -p /sd/.cattlepi
+mkdir -p ${SDROOT}/.cattlepi
 BUILDERS_API_KEY=$(jq -r ".config.buildcontrol.builders_api_key" /tmp/current_config)
 
 # inject our own ssh key
 curl -H "Accept: application/json" \
     -H "Content-Type: application/json" \
     -H "X-Api-Key: $BUILDERS_API_KEY" \
-    https://api.cattlepi.com/boot/default/config > /sd/builder.config
+    https://api.cattlepi.com/boot/default/config > ${SDROOT}/builder.config
 
 BUILDCONTROL_SSH_KEY=$(head -1 /home/pi/.ssh/id_rsa.pub)
 export BUILDCONTROL_SSH_KEY
-PAYLOAD=$(cat /sd/builder.config | jq '.config.ssh.pi.authorized_keys[1]=env.BUILDCONTROL_SSH_KEY')
+PAYLOAD=$(cat ${SDROOT}/builder.config | jq '.config.ssh.pi.authorized_keys[1]=env.BUILDCONTROL_SSH_KEY')
 
 curl -H "Accept: application/json" \
     -H "Content-Type: application/json" \
@@ -49,6 +51,19 @@ curl -H "Accept: application/json" \
     https://api.cattlepi.com/boot/default/config
 
 # setup structures for controlling the builder pis
+mkdir -p ${SDROOT}/builders
+BUILDERC=$(jq -r ".config.buildcontrol.build_machines | length" /tmp/current_config)
+let BUILDERC=$((BUILDERC - 1))
+for BUILDERI in `seq 0 $BUILDERC`
+do
+    CURRENT_BUILDER=$(jq -r '.config.buildcontrol.build_machines['$BUILDERI']' /tmp/current_config)
+    echo "found builder ${CURRENT_BUILDER}"
+    mkdir -p ${SDROOT}/builders/${CURRENT_BUILDER}
+done
 
+for BUILDERI in $(ls -1 ${SDROOT}/builders)
+do
+    echo "unknown:0:0" > ${SDROOT}/builders/${CURRENT_BUILDER}/state
+done
 
-sudo chown -R pi:pi /sd
+sudo chown -R pi:pi ${SDROOT}
