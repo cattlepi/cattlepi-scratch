@@ -32,6 +32,7 @@ su - pi -c "ssh-keygen -f /home/pi/.ssh/id_rsa -N '' -t rsa -b 4096 -C "hello@ca
 mkdir -p /sd/.cattlepi
 BUILDERS_API_KEY=$(jq -r ".config.buildcontrol.builders_api_key" /tmp/current_config)
 
+# inject our own ssh key
 curl -H "Accept: application/json" \
     -H "Content-Type: application/json" \
     -H "X-Api-Key: $BUILDERS_API_KEY" \
@@ -46,5 +47,8 @@ curl -H "Accept: application/json" \
     -H "X-Api-Key: $BUILDERS_API_KEY" \
     -X POST -d "$PAYLOAD" \
     https://api.cattlepi.com/boot/default/config
+
+# setup structures for controlling the builder pis
+
 
 sudo chown -R pi:pi /sd
