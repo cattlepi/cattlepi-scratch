@@ -2,6 +2,24 @@
 export SDROOT=/sd
 export HOME=${SDROOT}
 
+# sample config that can be used for build control - only relevant part shown
+# {
+#   "config": {
+#     "buildcontrol": {
+#       "aws_ak": "aws access_key",
+#       "aws_sk": "aws secret key",
+#       "aws_sqs_queue": "aws sqs queue URL",
+#       "build_machines": [
+#         "ip of build machine1",
+#         "ip of build machine2",
+#         "ip of build machine3"
+#       ],
+#       "builders_api_key": "cattlepi api key of the build machines",
+#       "gh_token": "github token - used to make api calls to github"
+#     },
+#   }
+# }
+
 # move tmp to sdcard (ln -s) and ensure right permissions
 sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
@@ -65,5 +83,8 @@ for BUILDERI in $(ls -1 ${SDROOT}/builders)
 do
     echo "unknown:0:0" > ${SDROOT}/builders/${CURRENT_BUILDER}/state
 done
+
+# setup the structures for receiving work
+mkdir -p ${SDROOT}/work
 
 sudo chown -R pi:pi ${SDROOT}
