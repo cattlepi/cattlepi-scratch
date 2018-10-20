@@ -3,6 +3,7 @@ export SDROOT=/sd
 export HOME=${SDROOT}
 export WORKDIR=${HOME}/work
 export STAGINGDIR=${WORKDIR}/tmp
+mkdir -p ${STAGINGDIR}
 
 if [ -f $WORKDIR/cattlepi ]; then
     cd $WORKDIR && git clone https://github.com/cattlepi/cattlepi.git
@@ -17,5 +18,7 @@ SQSQ=$(cat /tmp/current_config | jq -r '.config.buildcontrol.aws_sqs_queue')
 
 CURRENT_RUN=${STAGINGDIR}/current
 if [ -f ${CURRENT_RUN} ]; then
+    echo "job pending"
+else
     aws sqs receive-message --queue-url "${SQSQ}" > ${CURRENT_RUN}
 fi

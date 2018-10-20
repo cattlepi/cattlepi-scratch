@@ -81,7 +81,7 @@ done
 
 for BUILDERI in $(ls -1 ${SDROOT}/builders)
 do
-    echo "unknown:0:0" > ${SDROOT}/builders/${CURRENT_BUILDER}/state
+    touch ${SDROOT}/builders/${CURRENT_BUILDER}/state
 done
 
 # setup the structures for receiving work
