@@ -1,5 +1,11 @@
 #!/bin/bash
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export SDROOT=/sd
+export HOME=${SDROOT}
+export BUILDERSDIR=${SDROOT}/builders
+export WORKDIR=${SDROOT}/work
+export STAGINGDIR=${WORKDIR}/tmp
+export CURRENT_RUN=${STAGINGDIR}/current
 
 function update_current_time() {
     CURRENT_TIME=$(date +%s)

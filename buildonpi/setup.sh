@@ -1,6 +1,6 @@
 #!/bin/bash
-export SDROOT=/sd
-export HOME=${SDROOT}
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 # sample config that can be used for build control - only relevant part shown
 # {
@@ -69,22 +69,28 @@ curl -H "Accept: application/json" \
     https://api.cattlepi.com/boot/default/config
 
 # setup structures for controlling the builder pis
-mkdir -p ${SDROOT}/builders
+mkdir -p ${BUILDERSDIR}
 BUILDERC=$(jq -r ".config.buildcontrol.build_machines | length" /tmp/current_config)
 let BUILDERC=$((BUILDERC - 1))
 for BUILDERI in `seq 0 $BUILDERC`
 do
     CURRENT_BUILDER=$(jq -r '.config.buildcontrol.build_machines['$BUILDERI']' /tmp/current_config)
     echo "found builder ${CURRENT_BUILDER}"
-    mkdir -p ${SDROOT}/builders/${CURRENT_BUILDER}
+    mkdir -p ${BUILDERSDIR}/${CURRENT_BUILDER}
 done
 
-for BUILDERI in $(ls -1 ${SDROOT}/builders)
+for BUILDERI in $(ls -1 ${BUILDERSDIR})
 do
-    touch ${SDROOT}/builders/${CURRENT_BUILDER}/state
+    touch ${BUILDERSDIR}/${CURRENT_BUILDER}/state
 done
 
 # setup the structures for receiving work
-mkdir -p ${SDROOT}/work
+mkdir -p ${WORKDIR}
+
+for CSP in $(ls -1 ${SELFDIR})
+do
+    cp -R $CSP/* ${SDROOT}/
+    chmod +x ${SDROOT}/*.sh
+done
 
 sudo chown -R pi:pi ${SDROOT}

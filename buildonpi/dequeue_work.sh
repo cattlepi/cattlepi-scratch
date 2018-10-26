@@ -1,10 +1,8 @@
 #!/bin/bash
-export SDROOT=/sd
-export HOME=${SDROOT}
-export WORKDIR=${HOME}/work
-export STAGINGDIR=${WORKDIR}/tmp
-mkdir -p ${STAGINGDIR}
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
+mkdir -p ${STAGINGDIR}
 if [ -f $WORKDIR/cattlepi ]; then
     cd $WORKDIR && git clone https://github.com/cattlepi/cattlepi.git
 fi

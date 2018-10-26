@@ -1,11 +1,6 @@
 #!/bin/bash
-export SDROOT=/sd
-export HOME=${SDROOT}
-export WORKDIR=${HOME}/work
-export STAGINGDIR=${WORKDIR}/tmp
-export CURRENT_RUN=${STAGINGDIR}/current
-
-source ${SDROOT}/functions.sh > /dev/null 2>&1
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 if [ -f ${CURRENT_RUN} ]; then
     echo "job to schedule in ${CURRENT_RUN}"

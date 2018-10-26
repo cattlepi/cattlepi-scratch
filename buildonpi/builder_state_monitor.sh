@@ -1,6 +1,6 @@
 #!/bin/bash
-export SDROOT=/sd
-source ${SDROOT}/functions.sh
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 update_current_time
 time_diff $CURRENT_TIME
