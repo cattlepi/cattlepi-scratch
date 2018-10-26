@@ -69,9 +69,9 @@ declare -f persist_builder_state
 
 function check_builder_on_stock() {
     BUILDERID=$1
-    BUILDER_ON_STACK=1
-    [ $(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STACK=0
-    export BUILDER_ON_STACK
+    BUILDER_ON_STOCK=1
+    [ $(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
+    export BUILDER_ON_STOCK
 }
 declare -f check_builder_on_stock
 
