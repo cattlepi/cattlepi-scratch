@@ -86,6 +86,7 @@ done
 
 # setup the structures for receiving work
 mkdir -p ${WORKDIR}
+mkdir -p ${WORKFLOWDIR}
 
 for CSP in $(ls -1 ${SELFDIR})
 do

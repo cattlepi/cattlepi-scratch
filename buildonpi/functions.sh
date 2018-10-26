@@ -5,6 +5,7 @@ export HOME=${SDROOT}
 export BUILDERSDIR=${SDROOT}/builders
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
+export WORKFLOWDIR=${SDROOT}/workflow
 export CURRENT_RUN=${STAGINGDIR}/current
 
 function update_current_time() {
@@ -19,6 +20,11 @@ function time_diff() {
     export TIME_DELTA
 }
 declare -f time_diff
+
+function logw() {
+    echo "--------------------------------------------------------"
+    echo "[$(date)] $@"
+}
 
 function load_builder_state() {
     BUILDERID=$1
