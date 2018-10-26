@@ -1,10 +1,11 @@
 #!/bin/bash
+set -x
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 update_current_time
 time_diff $CURRENT_TIME
-BUILDERTIMEOUT=1800
+BUILDERTIMEOUT=30
 
 for BUILDERI in $(ls -1 ${SDROOT}/builders)
 do
