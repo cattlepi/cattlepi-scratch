@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
@@ -20,7 +21,7 @@ source ${SELFDIR}/functions.sh > /dev/null 2>&1
 #   }
 # }
 
-# move tmp to sdcard (ln -s) and ensure right permissions
+sudo umount ${SDROOT}
 sudo mkdir -p ${SDROOT}
 sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
@@ -29,6 +30,8 @@ sudo chown pi:pi ${SDROOT}
 # install the needed packages
 sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
 ufw allow http
+
+cd /var/www/html && sudo wget -c http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-06-29/2018-06-27-raspbian-stretch-lite.zip
 
 # install virtualenv
 sudo pip install virtualenv
@@ -59,9 +62,15 @@ curl -H "Accept: application/json" \
     -H "X-Api-Key: $BUILDERS_API_KEY" \
     https://api.cattlepi.com/boot/default/config > ${SDROOT}/builder.config
 
+ROUTE=$(ip route get 8.8.8.8)
+IPV4=$(awk '{print $7}' <<< "${route}")
+echo $IPV4
+RASPBIAN_IMG="http://${IPV4}/2018-06-27-raspbian-stretch-lite.zip"
+export RASPBIAN_IMG
+
 BUILDCONTROL_SSH_KEY=$(head -1 /home/pi/.ssh/id_rsa.pub)
 export BUILDCONTROL_SSH_KEY
-PAYLOAD=$(cat ${SDROOT}/builder.config | jq '.config.ssh.pi.authorized_keys[1]=env.BUILDCONTROL_SSH_KEY')
+PAYLOAD=$(cat ${SDROOT}/builder.config | jq '.config.ssh.pi.authorized_keys[1]=env.BUILDCONTROL_SSH_KEY' | jq '.config.standalone.raspbian_location=env.RASPBIAN_IMG')
 
 curl -H "Accept: application/json" \
     -H "Content-Type: application/json" \
@@ -89,10 +98,7 @@ done
 mkdir -p ${WORKDIR}
 mkdir -p ${WORKFLOWDIR}
 
-for CSP in $(ls -1 ${SELFDIR})
-do
-    cp -R $CSP/* ${SDROOT}/
-    chmod +x ${SDROOT}/*.sh
-done
+cp -R ${SELFDIR}/* ${SDROOT}/
+chmod +x ${SDROOT}/*.sh
 
 sudo chown -R pi:pi ${SDROOT}
