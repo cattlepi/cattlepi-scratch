@@ -27,7 +27,14 @@ do
                 echo "build already running on ${BUILDERI}"
             else
                 echo "starting build process on ${BUILDERI}"
-                nohup ${SELFDIR}/builder.sh ${BUILDERI} >> ${BUILDERSDIR}/${BUILDERID}/output 2>&1  &
+                BTS=$(date +%s)
+                BUILDLOCATION=${BUILDERSDIR}/${BUILDERID}/build_${BTS}
+                rm -rf ${BUILDLOCATION}
+                mkdir -p ${BUILDLOCATION}
+
+                nohup ${SELFDIR}/builder.sh ${BUILDERI} ${BUILDLOCATION} >> ${BUILDLOCATION}/output 2>&1  &
+                rm -f ${BUILDERSDIR}/${BUILDERID}/output
+                ln -s ${BUILDLOCATION}/output ${BUILDERSDIR}/${BUILDERID}/output
                 NOHUP_PID=$!
                 echo ${NOHUP_PID} > ${BUILDERSDIR}/${BUILDERID}/pid
             fi
