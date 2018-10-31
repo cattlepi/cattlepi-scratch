@@ -21,6 +21,7 @@ source ${SELFDIR}/functions.sh > /dev/null 2>&1
 # }
 
 # move tmp to sdcard (ln -s) and ensure right permissions
+sudo mkdir -p ${SDROOT}
 sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
