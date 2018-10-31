@@ -1,11 +1,14 @@
 #!/bin/bash
-echo "running build"
+export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${SELFDIR}/functions.sh > /dev/null 2>&1
+BUILDER=$1
+echo "running with builder ${BUILDER}"
+BUILDLOCATION=${BUILDERSDIR}/${BUILDER}/build
+rm -rf ${BUILDLOCATION}
+mkdir -p ${BUILDLOCATION}
+export BUILDER_NODE=${BUILDER}
+cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
+cd ${BUILDLOCATION}/cattlepi && make envsetup
+
 sleep 300
 exit 0
-
-# export HOME=/sd
-# cd $HOME && git clone https://github.com/cattlepi/cattlepi.git
-# cd $HOME/cattlepi && make envsetup
-
-# # need to figure out the nodes and if they are free
-# export BUILDER_NODE=${BUILDER_NODE:-192.168.1.235}

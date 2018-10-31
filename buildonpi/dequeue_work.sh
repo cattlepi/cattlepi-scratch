@@ -3,10 +3,13 @@ export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 mkdir -p ${STAGINGDIR}
-if [ -f $WORKDIR/cattlepi ]; then
+if [ ! -d $WORKDIR/cattlepi ]; then
     cd $WORKDIR && git clone https://github.com/cattlepi/cattlepi.git
+else
+    cd $WORKDIR/cattlepi && git checkout master && git pull
 fi
 
+echo "setting up environment"
 cd $WORKDIR/cattlepi && make envsetup > /dev/null 2>&1
 source $WORKDIR/cattlepi/tools/venv/bin/activate > /dev/null 2>&1
 aws sts get-caller-identity > /dev/null 2>&1

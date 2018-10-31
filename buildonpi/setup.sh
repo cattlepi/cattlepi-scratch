@@ -24,14 +24,17 @@ source ${SELFDIR}/functions.sh > /dev/null 2>&1
 sudo umount ${SDROOT}
 sudo mkdir -p ${SDROOT}
 sudo mount /dev/mmcblk0p2 ${SDROOT}
-sudo rm -rf ${SDROOT}/*
+# sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
 
 # install the needed packages
 sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
 ufw allow http
 
-cd /var/www/html && sudo wget -c http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-06-29/2018-06-27-raspbian-stretch-lite.zip
+mkdir -p ${SDROOT}/var/www/html
+cd ${SDROOT}/var/www/html && sudo wget -c http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-06-29/2018-06-27-raspbian-stretch-lite.zip
+rm /var/www/html/2018-06-27-raspbian-stretch-lite.zip
+ln -s /sd/var/www/html/2018-06-27-raspbian-stretch-lite.zip /var/www/html/2018-06-27-raspbian-stretch-lite.zip
 
 # install virtualenv
 sudo pip install virtualenv
@@ -63,7 +66,7 @@ curl -H "Accept: application/json" \
     https://api.cattlepi.com/boot/default/config > ${SDROOT}/builder.config
 
 ROUTE=$(ip route get 8.8.8.8)
-IPV4=$(awk '{print $7}' <<< "${route}")
+IPV4=$(awk '{print $7}' <<< "${ROUTE}")
 echo $IPV4
 RASPBIAN_IMG="http://${IPV4}/2018-06-27-raspbian-stretch-lite.zip"
 export RASPBIAN_IMG
