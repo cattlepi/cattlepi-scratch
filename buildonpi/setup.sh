@@ -27,6 +27,10 @@ sudo mount /dev/mmcblk0p2 ${SDROOT}
 # sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
 
+umount /${SDROOT}/tmp
+test -d /${SDROOT}/tmp || mkdir -m 1777 /${SDROOT}/tmp
+mount --bind /${SDROOT}/tmp /tmp
+
 # install the needed packages
 sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
 ufw allow http

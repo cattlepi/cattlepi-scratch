@@ -7,7 +7,11 @@ echo "running with builder ${BUILDER} in ${BUILDLOCATION}"
 export BUILDER_NODE=${BUILDER}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
 cd ${BUILDLOCATION}/cattlepi && make envsetup
+# test
+
 cd ${BUILDLOCATION}/cattlepi && make test_noop
+# actual image
+cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
 BUILDRESULT=$?
 
 echo ""
