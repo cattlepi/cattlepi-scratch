@@ -8,3 +8,9 @@ export BUILDER_NODE=${BUILDER}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
 cd ${BUILDLOCATION}/cattlepi && make envsetup
 cd ${BUILDLOCATION}/cattlepi && make test_noop
+
+echo ""
+echo "-------------------------"
+echo "build done"
+echo "-------------------------"
+
