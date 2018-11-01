@@ -35,7 +35,6 @@ mount --bind /${SDROOT}/tmp /tmp
 sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
 ufw allow http
 
-mkdir -p ${SDROOT}/var/www/html
 cd ${SDROOT}/var/www/html && sudo wget -c http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-06-29/2018-06-27-raspbian-stretch-lite.zip
 rm /var/www/html/2018-06-27-raspbian-stretch-lite.zip
 ln -s /sd/var/www/html/2018-06-27-raspbian-stretch-lite.zip /var/www/html/2018-06-27-raspbian-stretch-lite.zip
@@ -44,7 +43,6 @@ ln -s /sd/var/www/html/2018-06-27-raspbian-stretch-lite.zip /var/www/html/2018-0
 sudo pip install virtualenv
 
 # setup the environment vars
-mkdir -p ${SDROOT}/.aws
 cat <<'EOF' > ${SDROOT}/.aws/config
 [default]
 output = json
@@ -60,7 +58,6 @@ sudo rm -rf /home/pi/.ssh/id_*
 su - pi -c "ssh-keygen -f /home/pi/.ssh/id_rsa -N '' -t rsa -b 4096 -C "hello@cattlepi.com""
 
 # cattlepi section
-mkdir -p ${SDROOT}/.cattlepi
 BUILDERS_API_KEY=$(jq -r ".config.buildcontrol.builders_api_key" /tmp/current_config)
 
 # inject our own ssh key
@@ -100,10 +97,6 @@ for BUILDERI in $(ls -1 ${BUILDERSDIR})
 do
     touch ${BUILDERSDIR}/${CURRENT_BUILDER}/state
 done
-
-# setup the structures for receiving work
-mkdir -p ${WORKDIR}
-mkdir -p ${WORKFLOWDIR}
 
 cp -R ${SELFDIR}/* ${SDROOT}/
 chmod +x ${SDROOT}/*.sh

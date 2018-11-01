@@ -8,6 +8,14 @@ export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
 export CURRENT_RUN=${STAGINGDIR}/current
 
+mkdir -p ${BUILDERSDIR}
+mkdir -p ${WORKDIR}
+mkdir -p ${STAGINGDIR}
+mkdir -p ${WORKFLOWDIR}
+# aux
+mkdir -p ${SDROOT}/var/www/html
+mkdir -p ${SDROOT}/.aws
+
 function update_current_time() {
     CURRENT_TIME=$(date +%s)
     export CURRENT_TIME

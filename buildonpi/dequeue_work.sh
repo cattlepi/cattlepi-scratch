@@ -2,7 +2,6 @@
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
-mkdir -p ${STAGINGDIR}
 if [ ! -d $WORKDIR/cattlepi ]; then
     cd $WORKDIR && git clone https://github.com/cattlepi/cattlepi.git
 else
