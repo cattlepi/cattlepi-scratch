@@ -6,7 +6,7 @@ SELFME="$(basename "${BASH_SOURCE[0]}")"
 guard_once ${SELFME}
 if [ $GUARD -ne 0 ]; then
     echo "${SELFME} already setup"
-    exit 1
+    return 1
 fi
 
 # setup the environment vars

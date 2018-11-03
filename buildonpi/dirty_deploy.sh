@@ -6,7 +6,8 @@ TARGET="192.168.1.87"
 ssh-keygen -f "/home/mircea/.ssh/known_hosts" -R ${TARGET}
 
 tar czvf /tmp/builder.tar.gz -C $SELFDIR .
-sshi pi@${TARGET} mkdir -p /tmp/sd
+sshi pi@${TARGET} rm -rf /var/tmp/sd
+sshi pi@${TARGET} mkdir -p /var/tmp/sd
 scp -o StrictHostKeyChecking=no /tmp/builder.tar.gz pi@${TARGET}:/tmp/
-sshi pi@${TARGET} tar -xzvf /tmp/builder.tar.gz -C /tmp/sd
-sshi pi@${TARGET} /tmp/sd/setup.sh
+sshi pi@${TARGET} tar -xzvf /tmp/builder.tar.gz -C /var/tmp/sd
+sshi pi@${TARGET} sudo /var/tmp/sd/setup.sh

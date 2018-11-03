@@ -3,7 +3,7 @@ export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export SDROOT=/sd
 export HOME=${SDROOT}
 export BUILDERSDIR=${SDROOT}/builders
-export CFGDIR=${SDROOT}/config
+export CFGDIR=${SELFDIR}/config
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
@@ -21,10 +21,10 @@ mkdir -p ${SDROOT}/.aws
 function guard_once() {
     GUARDID=$1
     GUARD=0
-    if [ -f ${CFGDIR}/${CURRENT_RUN} ]; then
+    if [ -f ${CFGDIR}/${GUARDID} ]; then
         GUARD=1
     fi
-    touch ${CFGDIR}/${CURRENT_RUN}
+    touch ${CFGDIR}/${GUARDID}
     export GUARD
 }
 
