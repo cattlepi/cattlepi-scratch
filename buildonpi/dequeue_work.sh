@@ -14,11 +14,14 @@ source $WORKDIR/cattlepi/tools/venv/bin/activate > /dev/null 2>&1
 aws sts get-caller-identity > /dev/null 2>&1
 
 SQSQ=$(cat /tmp/current_config | jq -r '.config.buildcontrol.aws_sqs_queue')
-# echo "sqs queue is ${SQSQ}"
+echo "sqs queue is ${SQSQ}"
 
 CURRENT_RUN=${STAGINGDIR}/current
 if [ -f ${CURRENT_RUN} ]; then
     echo "job pending"
 else
     aws sqs receive-message --queue-url "${SQSQ}" > ${CURRENT_RUN}
+    if [ ! -s ${CURRENT_RUN} ]; then
+        rm -rf ${CURRENT_RUN}
+    fi
 fi
