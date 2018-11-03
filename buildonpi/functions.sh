@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export SDROOT=/sd
 export HOME=${SDROOT}
@@ -92,6 +91,7 @@ function check_builder_on_stock() {
     BUILDERID=$1
     BUILDER_ON_STOCK=1
     [ $(ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
+    echo $(ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} cat /proc/cmdline) | grep -q boot=cattlepi && BUILDER_ON_STOCK=0
     export BUILDER_ON_STOCK
 }
 declare -f check_builder_on_stock
