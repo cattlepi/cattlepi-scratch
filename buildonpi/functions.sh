@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export SDROOT=/sd
 export HOME=${SDROOT}
@@ -82,7 +83,7 @@ declare -f persist_builder_state
 function check_builder_alive() {
     BUILDERID=$1
     BUILDER_ALIVE=1
-    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} whoami 2>/dev/null || BUILDER_ALIVE=0
+    ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} whoami 2>/dev/null || BUILDER_ALIVE=0
     export BUILDER_ALIVE
 }
 declare -f persist_builder_state
@@ -90,13 +91,13 @@ declare -f persist_builder_state
 function check_builder_on_stock() {
     BUILDERID=$1
     BUILDER_ON_STOCK=1
-    [ $(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
+    [ $(ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
     export BUILDER_ON_STOCK
 }
 declare -f check_builder_on_stock
 
 function reset_builder_to_stock() {
     BUILDERID=$1
-    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} sudo /etc/cattlepi/restore_cattlepi.sh
+    ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} sudo /etc/cattlepi/restore_cattlepi.sh
 }
 declare -f reset_builder_to_stock

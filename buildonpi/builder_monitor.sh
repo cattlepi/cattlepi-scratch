@@ -19,7 +19,7 @@ do
             if [ "$BUILDER_ALIVE" -gt "0" ]; then
                 BUILDER_STATE="rebuild"
                 BUILDER_LAST_ACTION=${BUILDER_LAST_CHECKED}
-                reset_builder_to_stock
+                reset_builder_to_stock $BUILDERI
                 persist_builder_state $BUILDERI
                 exit 0
             fi
