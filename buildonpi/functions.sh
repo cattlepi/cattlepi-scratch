@@ -3,18 +3,30 @@ export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export SDROOT=/sd
 export HOME=${SDROOT}
 export BUILDERSDIR=${SDROOT}/builders
+export CFGDIR=${SDROOT}/config
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
 export CURRENT_RUN=${STAGINGDIR}/current
 
 mkdir -p ${BUILDERSDIR}
+mkdir -p ${CFGDIR}
 mkdir -p ${WORKDIR}
 mkdir -p ${STAGINGDIR}
 mkdir -p ${WORKFLOWDIR}
 # aux
 mkdir -p ${SDROOT}/var/www/html
 mkdir -p ${SDROOT}/.aws
+
+function guard_once() {
+    GUARDID=$1
+    GUARD=0
+    if [ -f ${CFGDIR}/${CURRENT_RUN} ]; then
+        GUARD=1
+    fi
+    touch ${CFGDIR}/${CURRENT_RUN}
+    export GUARD
+}
 
 function update_current_time() {
     CURRENT_TIME=$(date +%s)

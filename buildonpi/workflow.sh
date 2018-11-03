@@ -6,7 +6,7 @@ while true;
 do
     update_current_time
     logw "updating builders state"
-    ${SELFDIR}/builder_state_monitor.sh
+    ${SELFDIR}/builder_monitor.sh
     logw "dequeue work"
     ${SELFDIR}/dequeue_work.sh
     logw "schedule work"

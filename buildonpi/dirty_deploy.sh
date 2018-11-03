@@ -9,5 +9,4 @@ tar czvf /tmp/builder.tar.gz -C $SELFDIR .
 sshi pi@${TARGET} mkdir -p /tmp/sd
 scp -o StrictHostKeyChecking=no /tmp/builder.tar.gz pi@${TARGET}:/tmp/
 sshi pi@${TARGET} tar -xzvf /tmp/builder.tar.gz -C /tmp/sd
-sshi pi@${TARGET} chmod +x /tmp/sd/*.sh
-sshi pi@${TARGET} /tmp/sd/dirty_refresh.sh
+sshi pi@${TARGET} /tmp/sd/setup.sh
