@@ -23,31 +23,44 @@ cd ${BUILDLOCATION}/cattlepi && make envsetup
 
 # test
 cd ${BUILDLOCATION}/cattlepi && make test_noop
+BUILDRESULT=$?
+
+### this is the actual build
 # update_current_time
 # BUILDER_LAST_ACTION=${CURRENT_TIME}
 # persist_builder_state $BUILDER
 
-# # actual image
-# cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
-BUILDRESULT=$?
+# if [ $BUILDRESULT -eq 0 ]; then
+#     cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
+#     BUILDRESULT=$?
+# fi
 
 echo ""
 echo "-------------------------"
 if [ $BUILDRESULT -ne 0 ]; then
     github_status_update $BUILDER_TASK "failure"
+    echo "failure" > ${JOBDIR}/build_result
+    touch ${JOBDIR}/job_failure
 else
     github_status_update $BUILDER_TASK "success"
+    echo "success" > ${JOBDIR}/build_result
+    touch ${JOBDIR}/job_success
 fi
 
 # ack the message in the queue
 RECEIPT=$(head -1 ${JOBDIR}/handle)
 aws sqs delete-message --queue-url "${SQSQ}" --receipt-handle "${RECEIPT}"
-upload_logs_to_s3 $BUILDER_TASK
 # upload the logs
+cp ${BUILDLOCATION}/output ${JOBDIR}/build_output
+upload_logs_to_s3 $BUILDER_TASK
+
+# cleanup
+clean_builder_state $BUILDER
 
 # update the build state
 update_current_time
 BUILDER_LAST_ACTION=${CURRENT_TIME}
 BUILDER_STATE="rebuild"
+BUILDER_TASK=""
 persist_builder_state $BUILDER
 echo "-------------------------"

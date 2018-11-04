@@ -37,7 +37,9 @@ function github_status_update() {
     STATE=$2
     JOBDIR=${WORKDIR}/jobs/${JOBID}
     COMMITID=$(head -1 ${JOBDIR}/commit)
-    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"cattlepi CI","target_url":"https://cattlepi.com/'${JOBID}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
+    STRTARGET=${AWS_S3_PATH}/${JOBID}/index.html
+    STRDESCRIPTION="Cattlepi CI. Job Id: ${JOBID}"
+    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"'${STRDESCRIPTION}'","target_url":"'${STRTARGET}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
 }
 declare -f github_status_update
 
@@ -94,14 +96,22 @@ declare -f load_builder_state
 
 function persist_builder_state() {
     BUILDERID=$1
-    TMP_STATE=${SDROOT}/builders/${BUILDERID}/state.TMP_STATE
+    TMP_STATE=${SDROOT}/work/tmp/state.${BUILDERID}.TMP_STATE
     echo "BUILDER_STATE=${BUILDER_STATE}" > "${TMP_STATE}"
     echo "BUILDER_LAST_CHECKED=${BUILDER_LAST_CHECKED}" >> "${TMP_STATE}"
     echo "BUILDER_LAST_ACTION=${BUILDER_LAST_ACTION}" >> "${TMP_STATE}"
     echo "BUILDER_TASK=${BUILDER_TASK}" >> "${TMP_STATE}"
+    mkdir -p ${SDROOT}/builders/${BUILDERID}
     mv "${TMP_STATE}" ${SDROOT}/builders/${BUILDERID}/state
 }
 declare -f persist_builder_state
+
+function clean_builder_state() {
+    BUILDERID=$1
+    rm -rf ${SDROOT}/builders/${BUILDERID}
+    mkdir -p ${SDROOT}/builders/${BUILDERID}
+}
+declare -f clean_builder_state
 
 function check_builder_alive() {
     BUILDERID=$1
