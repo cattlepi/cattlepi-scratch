@@ -52,7 +52,7 @@ function upload_logs_to_s3() {
     do
         rm -f ${S3DIR}/${NFILE}
     done
-    cd ${UPLOADDIR} && ls | ${SDROOT}/index-html.sh > index.html
+    cd ${S3DIR} && ls | ${SDROOT}/index-html.sh > index.html
     aws s3 sync ${UPLOADDIR} s3://${AWS_S3_BUCKET}
     rm -rf ${S3DIR}
 }
