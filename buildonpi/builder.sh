@@ -6,10 +6,12 @@ source $WORKDIR/cattlepi/tools/venv/bin/activate > /dev/null 2>&1
 BUILDER=$1
 BUILDLOCATION=$2
 load_builder_state $BUILDER
+JOBDIR=${WORKDIR}/jobs/${BUILDER_TASK}
+
 github_status_update $BUILDER_TASK "pending"
+echo "build in progress" > ${JOBDIR}/build_output
 upload_logs_to_s3 $BUILDER_TASK
 
-JOBDIR=${WORKDIR}/jobs/${BUILDER_TASK}
 COMMITID=$(head -1 ${JOBDIR}/commit)
 SQSQ=$(cat /tmp/current_config | jq -r '.config.buildcontrol.aws_sqs_queue')
 
