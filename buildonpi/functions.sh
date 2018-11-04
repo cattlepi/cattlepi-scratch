@@ -8,6 +8,7 @@ export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
 export CURRENT_RUN=${STAGINGDIR}/current
+source ${SELFDIR}/setup_02configs.sh
 
 mkdir -p ${BUILDERSDIR}
 mkdir -p ${CFGDIR}
@@ -26,6 +27,15 @@ function guard_once() {
     fi
     touch ${CFGDIR}/${GUARDID}
     export GUARD
+}
+declare -f guard_once
+
+function github_status_update() {
+    JOBID=$1
+    STATE=$2
+    JOBDIR=${WORKDIR}/jobs/${JOBID}
+    COMMITID=$(head -1 ${JOBDIR}/commit)
+    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"cattlepi CI","target_url":"https://cattlepi.com/'${JOBID}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
 }
 
 function update_current_time() {
