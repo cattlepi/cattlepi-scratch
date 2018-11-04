@@ -15,12 +15,12 @@ cd ${BUILDLOCATION}/cattlepi && make envsetup
 
 # test
 cd ${BUILDLOCATION}/cattlepi && make test_noop
-update_current_time
-BUILDER_LAST_ACTION=${CURRENT_TIME}
-persist_builder_state $BUILDER
+# update_current_time
+# BUILDER_LAST_ACTION=${CURRENT_TIME}
+# persist_builder_state $BUILDER
 
-# actual image
-cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
+# # actual image
+# cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
 BUILDRESULT=$?
 
 echo ""
