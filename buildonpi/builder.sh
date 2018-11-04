@@ -9,7 +9,7 @@ load_builder_state $BUILDER
 github_status_update $BUILDER_TASK "pending"
 
 JOBDIR=${WORKDIR}/jobs/${BUILDER_TASK}
-COMMITID=$(head -1 ${BUILDER_TASK}/commit)
+COMMITID=$(head -1 ${JOBDIR}/commit)
 SQSQ=$(cat /tmp/current_config | jq -r '.config.buildcontrol.aws_sqs_queue')
 
 update_current_time
@@ -40,7 +40,7 @@ else
 fi
 
 # ack the message in the queue
-RECEIPT=$(head -1 ${BUILDER_TASK}/handle)
+RECEIPT=$(head -1 ${JOBDIR}/handle)
 aws sqs delete-message --queue-url "${SQSQ}" --receipt-handle "${RECEIPT}"
 # upload the logs
 
