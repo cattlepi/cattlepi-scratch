@@ -7,6 +7,7 @@ BUILDER=$1
 BUILDLOCATION=$2
 load_builder_state $BUILDER
 github_status_update $BUILDER_TASK "pending"
+upload_logs_to_s3 $BUILDER_TASK
 
 JOBDIR=${WORKDIR}/jobs/${BUILDER_TASK}
 COMMITID=$(head -1 ${JOBDIR}/commit)

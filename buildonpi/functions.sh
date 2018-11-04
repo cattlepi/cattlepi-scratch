@@ -48,8 +48,13 @@ function upload_logs_to_s3() {
     S3DIR=${UPLOADDIR}/${JOBID}
     mkdir -p ${S3DIR}
     cp -R ${JOBDIR}/* ${S3DIR}
-    echo ${AWS_S3_BUCKET} >> ${S3DIR}/s3_bucket
-    echo ${AWS_S3_PATH} >> ${S3DIR}/s3_bucket
+    for NFILE in handle job raw
+    do
+        rm -f ${S3DIR}/${NFILE}
+    done
+    cd ${UPLOADDIR} && ls | ${SDROOT}/index-html.sh > index.html
+    aws s3 sync ${UPLOADDIR} s3://${AWS_S3_BUCKET}
+    rm -rf ${S3DIR}
 }
 declare -f upload_logs_to_s3
 
