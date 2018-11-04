@@ -1,7 +1,4 @@
-- on build checkout at the commit indicated in the push (right now it's building master)
-- increase the push size in the aux api
 - maybe limit who can trigger a build
-- github update hooks
 - upload logs to S3 and link them into the hooks (also need to create a bucket and pass it in as a parameter)
 
 TOUCH
