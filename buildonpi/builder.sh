@@ -18,7 +18,7 @@ persist_builder_state $BUILDER
 echo "running with builder ${BUILDER} in ${BUILDLOCATION}"
 export BUILDER_NODE=${BUILDER}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
-cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
+cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/* && git reset --hard ${COMMITID}
 cd ${BUILDLOCATION}/cattlepi && make envsetup
 
 # test
