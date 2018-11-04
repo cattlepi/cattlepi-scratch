@@ -4,6 +4,7 @@ export SDROOT=/sd
 export HOME=${SDROOT}
 export BUILDERSDIR=${SDROOT}/builders
 export CFGDIR=${SELFDIR}/config
+export UPLOADDIR=${SELFDIR}/upload
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
@@ -15,6 +16,7 @@ mkdir -p ${CFGDIR}
 mkdir -p ${WORKDIR}
 mkdir -p ${STAGINGDIR}
 mkdir -p ${WORKFLOWDIR}
+mkdir -p ${UPLOADDIR}
 # aux
 mkdir -p ${SDROOT}/var/www/html
 mkdir -p ${SDROOT}/.aws
@@ -37,6 +39,18 @@ function github_status_update() {
     COMMITID=$(head -1 ${JOBDIR}/commit)
     curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"cattlepi CI","target_url":"https://cattlepi.com/'${JOBID}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
 }
+declare -f github_status_update
+
+function upload_logs_to_s3() {
+    JOBID=$1
+    JOBDIR=${WORKDIR}/jobs/${JOBID}
+    S3DIR=${UPLOADDIR}/${JOBID}
+    mkdir -p ${S3DIR}
+    cp -R ${JOBDIR} ${S3DIR}
+    echo ${AWS_S3_BUCKET} >> ${S3DIR}/s3_bucket
+    echo ${AWS_S3_PATH} >> ${S3DIR}/s3_bucket
+}
+declare -f upload_logs_to_s3
 
 function update_current_time() {
     CURRENT_TIME=$(date +%s)

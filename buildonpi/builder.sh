@@ -42,6 +42,7 @@ fi
 # ack the message in the queue
 RECEIPT=$(head -1 ${JOBDIR}/handle)
 aws sqs delete-message --queue-url "${SQSQ}" --receipt-handle "${RECEIPT}"
+upload_logs_to_s3 $BUILDER_TASK
 # upload the logs
 
 # update the build state
