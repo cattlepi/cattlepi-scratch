@@ -37,9 +37,8 @@ function github_status_update() {
     STATE=$2
     JOBDIR=${WORKDIR}/jobs/${JOBID}
     COMMITID=$(head -1 ${JOBDIR}/commit)
-    STRTARGET=${AWS_S3_PATH}/${JOBID}/index.html
-    STRDESCRIPTION="Cattlepi CI. Job Id: ${JOBID}"
-    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"'${STRDESCRIPTION}'","target_url":"'${STRTARGET}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
+    STRTARGET="${AWS_S3_PATH}/${JOBID}/index.html"
+    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"'${STRTARGET}'","target_url":"'${STRTARGET}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
 }
 declare -f github_status_update
 
