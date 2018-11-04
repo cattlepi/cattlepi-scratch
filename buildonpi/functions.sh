@@ -47,7 +47,7 @@ function upload_logs_to_s3() {
     JOBDIR=${WORKDIR}/jobs/${JOBID}
     S3DIR=${UPLOADDIR}/${JOBID}
     mkdir -p ${S3DIR}
-    cp -R ${JOBDIR} ${S3DIR}
+    cp -R ${JOBDIR}/* ${S3DIR}
     echo ${AWS_S3_BUCKET} >> ${S3DIR}/s3_bucket
     echo ${AWS_S3_PATH} >> ${S3DIR}/s3_bucket
 }
