@@ -28,6 +28,13 @@ cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
 cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
 cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
 BUILDRESULT=$?
+if [ $BUILDRESULT -ne 0 ]; then
+   sleep 10
+   cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
+   cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
+   BUILDRESULT=$?
+fi
+
 update_current_time
 BUILDER_LAST_ACTION=${CURRENT_TIME}
 persist_builder_state $BUILDER
