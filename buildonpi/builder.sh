@@ -21,12 +21,18 @@ persist_builder_state $BUILDER
 echo "running with builder ${BUILDER} in ${BUILDLOCATION}"
 export BUILDER_NODE=${BUILDER}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
-cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/* && git reset --hard ${COMMITID}
-cd ${BUILDLOCATION}/cattlepi && make envsetup
-
-# test
-cd ${BUILDLOCATION}/cattlepi && make test_noop
+cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
+cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
 BUILDRESULT=$?
+update_current_time
+BUILDER_LAST_ACTION=${CURRENT_TIME}
+persist_builder_state $BUILDER
+
+if [ $BUILDRESULT -eq 0 ]; then
+    cd ${BUILDLOCATION}/cattlepi && make envsetup
+    cd ${BUILDLOCATION}/cattlepi && make test_noop
+    BUILDRESULT=$?
+fi
 
 ### this is the actual build
 # update_current_time
