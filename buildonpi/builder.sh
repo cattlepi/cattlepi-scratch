@@ -18,6 +18,9 @@ SQSQ=$(cat /tmp/current_config | jq -r '.config.buildcontrol.aws_sqs_queue')
 update_current_time
 BUILDER_LAST_ACTION=${CURRENT_TIME}
 persist_builder_state $BUILDER
+echo "user is ${USER}"
+echo "shell is ${SHELL}"
+echo "path is ${PATH}"
 echo "running with builder ${BUILDER} in ${BUILDLOCATION}"
 export BUILDER_NODE=${BUILDER}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
