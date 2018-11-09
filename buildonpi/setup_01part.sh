@@ -15,6 +15,6 @@ sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
 
-umount /${SDROOT}/tmp
-test -d /${SDROOT}/tmp || mkdir -m 1777 /${SDROOT}/tmp
-mount --bind /${SDROOT}/tmp /tmp
+sudo umount ${SDROOT}/tmp
+test -d ${SDROOT}/tmp || sudo mkdir -m 1777 ${SDROOT}/tmp
+sudo mount --bind ${SDROOT}/tmp /tmp
