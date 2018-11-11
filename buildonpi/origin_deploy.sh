@@ -4,6 +4,6 @@ set -x
 mkdir -p /var/tmp/clone
 cd /var/tmp/clone && git clone https://github.com/cattlepi/cattlepi-scratch.git
 cd /var/tmp/clone/cattlepi-scratch && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
-cd /var/tmp/clone/cattlepi-scratch && git reset --hard bba1d39c7835891cd2f0d0310025ab6bb37c7b23
+cd /var/tmp/clone/cattlepi-scratch && git reset --hard 97d0f45cc9487173747f24b9e332b78681bca6cb
 sudo /var/tmp/clone/cattlepi-scratch/buildonpi/setup.sh
 sudo /var/tmp/clone/cattlepi-scratch/buildonpi/install_monitor.sh
