@@ -10,8 +10,8 @@ fi
 
 # use the config injected ssh keys (this will give us access to the builder)
 sudo rm -rf /home/pi/.ssh/id_*
-jq -r ".config.buildcontrol.ssh_idrsa" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa
-jq -r ".config.buildcontrol.ssh_idrsa_pub" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa.pub
+jq -r ".config.buildcontrol.ssh_id_rsa" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa
+jq -r ".config.buildcontrol.ssh_id_rsa_pub" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa.pub
 sudo chown pi:pi /home/pi/.ssh/id_*
 sudo chmod 400 /home/pi/.ssh/id_*
 
