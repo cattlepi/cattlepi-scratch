@@ -8,9 +8,12 @@ if [ $GUARD -ne 0 ]; then
     return 1
 fi
 
-# generate ssh keys
+# use the config injected ssh keys (this will give us access to the builder)
 sudo rm -rf /home/pi/.ssh/id_*
-su - pi -c "ssh-keygen -f /home/pi/.ssh/id_rsa -N '' -t rsa -b 4096 -C "hello@cattlepi.com""
+jq -r ".config.buildcontrol.ssh_idrsa" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa
+jq -r ".config.buildcontrol.ssh_idrsa_pub" /tmp/current_config | base64 -d > /home/pi/.ssh/id_rsa.pub
+sudo chown pi:pi /home/pi/.ssh/id_*
+sudo chmod 400 /home/pi/.ssh/id_*
 
 # cattlepi section
 BUILDERS_API_KEY=$(jq -r ".config.buildcontrol.builders_api_key" /tmp/current_config)
