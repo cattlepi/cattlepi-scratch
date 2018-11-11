@@ -10,7 +10,8 @@ if [ $GUARD -ne 0 ]; then
 fi
 
 # install the needed packages
-sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
+sudo apt-get update
+sudo apt-get install -y libffi-dev libssl-dev python-pip nginx virtualenv
 ufw allow http
 
 cd ${SDROOT}/var/www/html && sudo wget -O ${RASPBIAN_FILE} -c ${RASPBIAN_LOCATION}
