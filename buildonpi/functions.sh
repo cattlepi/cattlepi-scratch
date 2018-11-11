@@ -4,16 +4,19 @@ export SDROOT=/sd
 export HOME=${SDROOT}
 export BUILDERSDIR=${SDROOT}/builders
 export CFGDIR=${SELFDIR}/config
+export UPLOADDIR=${SELFDIR}/upload
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
 export CURRENT_RUN=${STAGINGDIR}/current
+source ${SELFDIR}/setup_02configs.sh
 
 mkdir -p ${BUILDERSDIR}
 mkdir -p ${CFGDIR}
 mkdir -p ${WORKDIR}
 mkdir -p ${STAGINGDIR}
 mkdir -p ${WORKFLOWDIR}
+mkdir -p ${UPLOADDIR}
 # aux
 mkdir -p ${SDROOT}/var/www/html
 mkdir -p ${SDROOT}/.aws
@@ -27,6 +30,36 @@ function guard_once() {
     touch ${CFGDIR}/${GUARDID}
     export GUARD
 }
+declare -f guard_once
+
+function github_status_update() {
+    JOBID=$1
+    STATE=$2
+    JOBDIR=${WORKDIR}/jobs/${JOBID}
+    COMMITID=$(head -1 ${JOBDIR}/commit)
+    STRTARGET="${AWS_S3_PATH}/${JOBID}/index.html"
+    curl -u ${GITHUB_API_USER}:${GITHUB_API_TOKEN} -X POST -d '{"state":"'${STATE}'","description":"'${STRTARGET}'","target_url":"'${STRTARGET}'"}' https://api.github.com/repos/cattlepi/cattlepi/statuses/${COMMITID}
+}
+declare -f github_status_update
+
+function upload_logs_to_s3() {
+    JOBID=$1
+    JOBDIR=${WORKDIR}/jobs/${JOBID}
+    S3DIR=${UPLOADDIR}/${JOBID}
+    mkdir -p ${S3DIR}
+    cp -R ${JOBDIR}/* ${S3DIR}
+    for NFILE in handle job raw
+    do
+        rm -f ${S3DIR}/${NFILE}
+    done
+    find ${S3DIR} -type f -exec mv '{}' '{}'.txt \;
+    cd ${S3DIR} && ls | ${SDROOT}/index-html.sh > ${JOBDIR}/index.html
+    cp ${JOBDIR}/index.html ${S3DIR}/index.html
+    rm ${JOBDIR}/index.html
+    aws s3 sync ${UPLOADDIR} s3://${AWS_S3_BUCKET}
+    rm -rf ${S3DIR}
+}
+declare -f upload_logs_to_s3
 
 function update_current_time() {
     CURRENT_TIME=$(date +%s)
@@ -70,14 +103,22 @@ declare -f load_builder_state
 
 function persist_builder_state() {
     BUILDERID=$1
-    TMP_STATE=${SDROOT}/builders/${BUILDERID}/state.TMP_STATE
+    TMP_STATE=${SDROOT}/work/tmp/state.${BUILDERID}.TMP_STATE
     echo "BUILDER_STATE=${BUILDER_STATE}" > "${TMP_STATE}"
     echo "BUILDER_LAST_CHECKED=${BUILDER_LAST_CHECKED}" >> "${TMP_STATE}"
     echo "BUILDER_LAST_ACTION=${BUILDER_LAST_ACTION}" >> "${TMP_STATE}"
     echo "BUILDER_TASK=${BUILDER_TASK}" >> "${TMP_STATE}"
+    mkdir -p ${SDROOT}/builders/${BUILDERID}
     mv "${TMP_STATE}" ${SDROOT}/builders/${BUILDERID}/state
 }
 declare -f persist_builder_state
+
+function clean_builder_state() {
+    BUILDERID=$1
+    rm -rf ${SDROOT}/builders/${BUILDERID}
+    mkdir -p ${SDROOT}/builders/${BUILDERID}
+}
+declare -f clean_builder_state
 
 function check_builder_alive() {
     BUILDERID=$1

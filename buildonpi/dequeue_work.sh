@@ -4,8 +4,6 @@ source ${SELFDIR}/functions.sh > /dev/null 2>&1
 
 if [ ! -d $WORKDIR/cattlepi ]; then
     cd $WORKDIR && git clone https://github.com/cattlepi/cattlepi.git
-else
-    cd $WORKDIR/cattlepi && git checkout master && git pull
 fi
 
 echo "setting up environment"

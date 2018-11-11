@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 export SELFDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${SELFDIR}/functions.sh > /dev/null 2>&1
 SELFME="$(basename "${BASH_SOURCE[0]}")"
@@ -10,7 +9,8 @@ if [ $GUARD -ne 0 ]; then
 fi
 
 # install the needed packages
-sudo apt-get install -y libffi-dev libssl-dev python-pip nginx
+sudo apt-get update
+sudo apt-get install -y libffi-dev libssl-dev python-pip nginx virtualenv
 ufw allow http
 
 cd ${SDROOT}/var/www/html && sudo wget -O ${RASPBIAN_FILE} -c ${RASPBIAN_LOCATION}
