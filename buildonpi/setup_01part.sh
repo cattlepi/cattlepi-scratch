@@ -14,9 +14,9 @@ sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
 
-sudo umount ${SDROOT}/tmp
-test -d ${SDROOT}/tmp || sudo mkdir -m 1777 ${SDROOT}/tmp
-sudo mount --bind ${SDROOT}/tmp /tmp
+# sudo umount ${SDROOT}/tmp
+# test -d ${SDROOT}/tmp || sudo mkdir -m 1777 ${SDROOT}/tmp
+# sudo mount --bind ${SDROOT}/tmp /tmp
 
 # rerun the update after the tmp update
 /etc/cattlepi/autoupdate.sh

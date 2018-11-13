@@ -46,14 +46,15 @@ if [ $BUILDRESULT -eq 0 ]; then
 fi
 
 ### this is the actual build
-# update_current_time
-# BUILDER_LAST_ACTION=${CURRENT_TIME}
-# persist_builder_state $BUILDER
+update_current_time
+BUILDER_LAST_ACTION=${CURRENT_TIME}
+persist_builder_state $BUILDER
 
-# if [ $BUILDRESULT -eq 0 ]; then
-#     cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
-#     BUILDRESULT=$?
-# fi
+if [ $BUILDRESULT -eq 0 ]; then
+    cd ${BUILDLOCATION}/cattlepi && make envsetup
+    cd ${BUILDLOCATION}/cattlepi && make raspbian_cattlepi
+    BUILDRESULT=$?
+fi
 
 echo ""
 echo "-------------------------"
