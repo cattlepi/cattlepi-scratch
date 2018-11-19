@@ -24,15 +24,22 @@ echo "shell is ${SHELL}"
 echo "path is ${PATH}"
 echo "running with builder ${BUILDER} in ${BUILDLOCATION}"
 export BUILDER_NODE=${BUILDER}
-cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
-cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
-cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
-BUILDRESULT=$?
-if [ $BUILDRESULT -ne 0 ]; then
-   sleep 10
-   cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
-   cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
-   BUILDRESULT=$?
+
+# more evolced git checkout - sometime it takes quite some time for a new commit hash to show up
+update_current_time
+BUILDRESULT=1
+GITTIMEOUT=600
+while [ $BUILDRESULT -ne 0 ]; then
+    sleep 10
+    time_diff ${CURRENT_TIME}
+    if [ ${TIME_DELTA} -gt ${GITTIMEOUT} ]; then
+        break
+    fi
+    rm -rf ${BUILDLOCATION}/cattlepi
+    cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
+    cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
+    cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
+    BUILDRESULT=$?
 fi
 
 update_current_time
