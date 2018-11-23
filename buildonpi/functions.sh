@@ -8,6 +8,8 @@ export UPLOADDIR=${SELFDIR}/upload
 export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
+export AUTOBUILDDIR=${SDROOT}/autobuild
+export AUTOBUILDREQUESTED=${AUTOBUILDDIR}/request
 export CURRENT_RUN=${STAGINGDIR}/current
 source ${SELFDIR}/setup_02configs.sh
 
@@ -16,6 +18,7 @@ mkdir -p ${CFGDIR}
 mkdir -p ${WORKDIR}
 mkdir -p ${STAGINGDIR}
 mkdir -p ${WORKFLOWDIR}
+mkdir -p ${AUTOBUILDDIR}
 mkdir -p ${UPLOADDIR}
 # aux
 mkdir -p ${SDROOT}/var/www/html

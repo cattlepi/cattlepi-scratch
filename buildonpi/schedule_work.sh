@@ -33,7 +33,7 @@ if [ -f ${CURRENT_RUN} ]; then
     fi
     echo $COMMITID > $JOBDIR/commit
     # find builder
-    for BUILDERI in $(ls -1 ${SDROOT}/builders)
+    for BUILDERI in $(ls -1 ${SDROOT}/builders | shuf)
     do
         load_builder_state $BUILDERI
         if [ "$BUILDER_STATE" = "building" ]; then
