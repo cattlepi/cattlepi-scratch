@@ -45,7 +45,7 @@ do
     fi
 done
 
-for BUILDERI in $(ls -1 ${SDROOT}/builders)
+for BUILDERI in $(ls -1 ${SDROOT}/builders | shuf)
 do
     echo "found builder ${BUILDERI}"
     load_builder_state $BUILDERI
