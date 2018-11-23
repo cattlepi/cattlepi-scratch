@@ -10,8 +10,6 @@ BUILDER=$1
 BUILDLOCATION=$2
 load_builder_state $BUILDER
 
-rm -rf ${BUILDLOCATION}
-mkdir -p ${BUILDLOCATION}
 cd ${BUILDLOCATION} && git clone https://github.com/cattlepi/cattlepi.git
 cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
 cd ${BUILDLOCATION}/cattlepi && git reset --hard origin/master

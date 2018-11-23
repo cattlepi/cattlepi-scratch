@@ -9,6 +9,7 @@ export WORKDIR=${SDROOT}/work
 export STAGINGDIR=${WORKDIR}/tmp
 export WORKFLOWDIR=${SDROOT}/workflow
 export AUTOBUILDDIR=${SDROOT}/autobuild
+export AUTOBUILDREQUESTED=${AUTOBUILDDIR}/request
 export CURRENT_RUN=${STAGINGDIR}/current
 source ${SELFDIR}/setup_02configs.sh
 

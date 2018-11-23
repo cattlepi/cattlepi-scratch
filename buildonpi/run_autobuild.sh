@@ -45,18 +45,22 @@ do
     fi
 done
 
-for BUILDERI in $(ls -1 ${SDROOT}/builders | shuf)
-do
-    echo "found builder ${BUILDERI}"
-    load_builder_state $BUILDERI
-    if [ "$BUILDER_STATE" = "ready" ]; then
-        check_builder_alive $BUILDERI
-        if [ "$BUILDER_ALIVE" -gt "0" ]; then
-            BUILDER_STATE="autobuild"
-            BUILDER_LAST_ACTION=${BUILDER_LAST_CHECKED}
-            # pick a builder
-            persist_builder_state $BUILDERI
-            exit 0
+if [ -r ${AUTOBUILDREQUESTED} ]; then
+    for BUILDERI in $(ls -1 ${SDROOT}/builders | shuf)
+    do
+        echo "found builder ${BUILDERI}"
+        load_builder_state $BUILDERI
+        if [ "$BUILDER_STATE" = "ready" ]; then
+            check_builder_alive $BUILDERI
+            if [ "$BUILDER_ALIVE" -gt "0" ]; then
+                rm -rf ${AUTOBUILDREQUESTED}
+                BUILDER_STATE="autobuild"
+                BUILDER_LAST_ACTION=${BUILDER_LAST_CHECKED}
+                # pick a builder
+                persist_builder_state $BUILDERI
+                exit 0
+            fi
         fi
-    fi
-done
+    done
+fi
+
