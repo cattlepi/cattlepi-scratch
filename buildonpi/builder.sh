@@ -29,7 +29,8 @@ export BUILDER_NODE=${BUILDER}
 update_current_time
 BUILDRESULT=1
 GITTIMEOUT=600
-while [ $BUILDRESULT -ne 0 ]; then
+while [ $BUILDRESULT -ne 0 ]
+do
     sleep 10
     time_diff ${CURRENT_TIME}
     if [ ${TIME_DELTA} -gt ${GITTIMEOUT} ]; then
@@ -40,7 +41,7 @@ while [ $BUILDRESULT -ne 0 ]; then
     cd ${BUILDLOCATION}/cattlepi && git fetch origin +refs/pull/*/merge:refs/remotes/origin/pr/*
     cd ${BUILDLOCATION}/cattlepi && git reset --hard ${COMMITID}
     BUILDRESULT=$?
-fi
+done
 
 update_current_time
 BUILDER_LAST_ACTION=${CURRENT_TIME}
