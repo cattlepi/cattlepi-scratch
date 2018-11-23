@@ -7,6 +7,8 @@ do
     update_current_time
     logw "updating builders state"
     ${SELFDIR}/builder_monitor.sh
+    logw "run autobuild"
+    ${SELFDIR}/run_autobuild.sh
     logw "dequeue work"
     ${SELFDIR}/dequeue_work.sh
     logw "schedule work"
