@@ -13,3 +13,4 @@ cd /var/tmp/clone/cattlepi-scratch && git fetch origin +refs/pull/*/merge:refs/r
 cd /var/tmp/clone/cattlepi-scratch && git reset --hard ${COMMIT_HASH}
 sudo /var/tmp/clone/cattlepi-scratch/buildonpi/setup.sh
 sudo /var/tmp/clone/cattlepi-scratch/buildonpi/install_monitor.sh
+sudo /var/tmp/clone/cattlepi-scratch/buildonpi/install_autobuild.sh
