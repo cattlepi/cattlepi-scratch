@@ -31,6 +31,7 @@ do
                 if [ "$BUILDER_ON_STOCK" -gt "0" ]; then
                     BUILDER_STATE="ready"
                     BUILDER_LAST_ACTION=${BUILDER_LAST_CHECKED}
+                    clean_builder_state $BUILDERI
                     persist_builder_state $BUILDERI
                     exit 0
                 fi
