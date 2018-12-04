@@ -126,7 +126,7 @@ declare -f clean_builder_state
 function check_builder_alive() {
     BUILDERID=$1
     BUILDER_ALIVE=1
-    ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} whoami 2>/dev/null || BUILDER_ALIVE=0
+    ssh -C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} whoami 2>/dev/null || BUILDER_ALIVE=0
     export BUILDER_ALIVE
 }
 declare -f persist_builder_state
@@ -134,14 +134,14 @@ declare -f persist_builder_state
 function check_builder_on_stock() {
     BUILDERID=$1
     BUILDER_ON_STOCK=1
-    [ $(ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
-    echo $(ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} cat /proc/cmdline) | grep -q boot=cattlepi && BUILDER_ON_STOCK=0
+    [ $(ssh -C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} /etc/cattlepi/release.sh 2>/dev/null) == 'raspbian_stock' ] || BUILDER_ON_STOCK=0
+    echo $(ssh -C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} cat /proc/cmdline) | grep -q boot=cattlepi && BUILDER_ON_STOCK=0
     export BUILDER_ON_STOCK
 }
 declare -f check_builder_on_stock
 
 function reset_builder_to_stock() {
     BUILDERID=$1
-    ssh -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} sudo /etc/cattlepi/restore_cattlepi.sh
+    ssh -C -o ControlMaster=auto -o ControlPersist=60s -o UserKnownHostsFile=/dev/null -o PasswordAuthentication=no -o StrictHostKeyChecking=no -o ConnectTimeout=5 pi@${BUILDERID} sudo /etc/cattlepi/restore_cattlepi.sh
 }
 declare -f reset_builder_to_stock
