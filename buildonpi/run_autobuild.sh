@@ -4,7 +4,7 @@ source ${SELFDIR}/functions.sh > /dev/null 2>&1
 source $WORKDIR/cattlepi/tools/venv/bin/activate > /dev/null 2>&1
 export PATH=${PATH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-JOBTIMEOUT=7200
+JOBTIMEOUT=10800
 for BUILDERI in $(ls -1 ${SDROOT}/builders)
 do
     echo "found builder ${BUILDERI}"
