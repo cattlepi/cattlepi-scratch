@@ -14,6 +14,13 @@ sudo mount /dev/mmcblk0p2 ${SDROOT}
 sudo rm -rf ${SDROOT}/*
 sudo chown pi:pi ${SDROOT}
 
+# setup python3 as default on this system to be able
+# to run the cattlepi build properly
+
+sudo update-alternatives --remove-all python
+sudo update-alternatives --install /usr/bin/python python $(readlink -f $(which python2)) 1
+sudo update-alternatives --install /usr/bin/python python $(readlink -f $(which python3)) 2
+
 # sudo umount ${SDROOT}/tmp
 # test -d ${SDROOT}/tmp || sudo mkdir -m 1777 ${SDROOT}/tmp
 # sudo mount --bind ${SDROOT}/tmp /tmp

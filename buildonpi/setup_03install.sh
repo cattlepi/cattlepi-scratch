@@ -10,12 +10,10 @@ fi
 
 # install the needed packages
 sudo apt-get update
-sudo apt-get install -y libffi-dev libssl-dev python-pip nginx virtualenv
+sudo apt-get install -y libffi-dev libssl-dev nginx python3-pip python3-venv
 ufw allow http
 
 cd ${SDROOT}/var/www/html && sudo wget -O ${RASPBIAN_FILE} -c ${RASPBIAN_LOCATION}
 rm /var/www/html/${RASPBIAN_FILE}
 ln -s /sd/var/www/html/${RASPBIAN_FILE} /var/www/html/${RASPBIAN_FILE}
 
-# install virtualenv
-sudo pip install virtualenv
